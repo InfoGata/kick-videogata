@@ -1,0 +1,7 @@
+{
+  "id": "",
+  "name": "Plugin for Kick",
+  "version": "1.0.0",
+  "script": "dist/index.js",
+  "description": "Plugin for playing videos from Kick.com"
+}
