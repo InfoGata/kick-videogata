@@ -43,9 +43,10 @@ const getChannelVideos = async (
     items: videos,
     channel: {
       name: json.user.username,
-      images: [{ url: json.user.profilePic }],
+      images: [{ url: json.user.profile_pic }],
       apiId: json.slug,
     },
+    isLive: json.livestream?.is_live,
   };
 };
 
@@ -67,6 +68,24 @@ const getVideo = async (request: GetVideoRequest): Promise<Video> => {
   };
 };
 
+const getLiveVideo = async (request: GetLiveVideoRequest): Promise<Video> => {
+  const url = `https://kick.com/api/v1/channels/${request.channelApiId}`;
+  const response = await application.networkRequest(url);
+  const json: KickChannel = await response.json();
+
+  return {
+    channelName: json.user.username,
+    channelApiId: json.slug,
+    title: json.livestream?.session_title || "",
+    sources: [
+      {
+        source: json.playback_url,
+        type: "application/x-mpegURL",
+      },
+    ],
+  };
+};
+
 const searchAll = async (request: SearchRequest): Promise<SearchAllResult> => {
   const channelsPromise = searchChannels(request);
   const [channels] = await Promise.all([channelsPromise]);
@@ -77,6 +96,7 @@ application.onSearchAll = searchAll;
 application.onSearchChannels = searchChannels;
 application.onGetChannelVideos = getChannelVideos;
 application.onGetVideo = getVideo;
+application.onGetLiveVideo = getLiveVideo;
 
 const init = () => {};
 
