@@ -36,6 +36,7 @@ const getChannelVideos = async (
       views: p.views,
       channelName: json.user.username,
       channelApiId: json.slug,
+      uploadDate: p.created_at,
     })
   );
 
