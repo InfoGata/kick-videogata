@@ -1,7 +1,14 @@
 {
   "id": "EqzsHePc2k6Rg5Lmo0r7T",
   "name": "Plugin for Kick",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "script": "dist/index.js",
-  "description": "Plugin for playing videos from Kick.com"
+  "description": "Plugin for playing videos from Kick.com",
+  "authentication": {
+    "loginUrl": "https://kick.com/",
+    "headersToFind": ["Authorization"],
+    "cookiesToFind": ["kick_session", "XSRF-TOKEN"],
+    "completionUrl": "https://kick.com/broadcasting/auth",
+    "loginButton": "#login-button"
+  }
 }
