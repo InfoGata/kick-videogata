@@ -87,6 +87,19 @@ const getLiveVideo = async (request: GetLiveVideoRequest): Promise<Video> => {
   };
 };
 
+const getUserChannels = async (
+  request: UserChannelRequest
+): Promise<SearchChannelResult> => {
+  const url = "https://kick.com/api/v2/channels/followed?cursor=0";
+  const response = await application.networkRequest(url);
+  console.log(response);
+  const json = await response.json();
+  console.log(json);
+  return {
+    items: [],
+  };
+};
+
 const searchAll = async (request: SearchRequest): Promise<SearchAllResult> => {
   const channelsPromise = searchChannels(request);
   const [channels] = await Promise.all([channelsPromise]);
@@ -99,6 +112,13 @@ application.onGetChannelVideos = getChannelVideos;
 application.onGetVideo = getVideo;
 application.onGetLiveVideo = getLiveVideo;
 
-const init = () => {};
+const init = async () => {
+  const isLoggedIn = await application.isLoggedIn();
+  console.log(isLoggedIn);
+  if (isLoggedIn) {
+    application.onGetUserChannels = getUserChannels;
+  }
+};
 
+application.onPostLogin = init;
 init();
