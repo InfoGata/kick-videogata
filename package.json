@@ -9,12 +9,13 @@
     "iso8601-duration": "^2.1.1"
   },
   "scripts": {
-    "build": "parcel build src/index.ts --dist-dir dist/ --no-source-maps",
-    "start": "parcel src/index.ts --dist-dir dist/ --no-source-maps"
+    "build": "vite build",
+    "start": "vite build --watch"
   },
   "devDependencies": {
-    "parcel": "^2.5.0",
-    "typescript": "^4.2.3"
+    "typescript": "^4.2.3",
+    "vite": "^6.2.4",
+    "vite-plugin-singlefile": "^2.2.0"
   },
   "browserslist": [
     "last 1 Chrome version"
