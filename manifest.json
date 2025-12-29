@@ -1,7 +1,7 @@
 {
   "id": "EqzsHePc2k6Rg5Lmo0r7T",
   "name": "Plugin for Kick",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "script": "dist/index.js",
   "description": "Plugin for playing videos from Kick.com"
 }
