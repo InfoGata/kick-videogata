@@ -3,5 +3,8 @@
   "name": "Plugin for Kick",
   "version": "1.2.0",
   "script": "dist/index.js",
-  "description": "Plugin for playing videos from Kick.com"
+  "description": "Plugin for playing videos from Kick.com",
+  "siteMatch": [
+    "https://kick.com/*"
+  ]
 }
