@@ -69,6 +69,36 @@ const getVideo = async (request: GetVideoRequest): Promise<Video> => {
   };
 };
 
+// The master playlist only sends CORS headers to Kick's own origins (the
+// allow-list is in the stream token), so the player can't load it directly.
+// The quality playlists and segments it points to allow any origin, so fetch
+// the master here and hand the player its contents as a data url.
+const getLivePlaylistSource = async (playbackUrl: string): Promise<string> => {
+  try {
+    const response = await application.networkRequest(playbackUrl);
+    if (!response.ok) {
+      return playbackUrl;
+    }
+    const playlist = await response.text();
+    if (!playlist.startsWith("#EXTM3U")) {
+      return playbackUrl;
+    }
+    // A data url has no base, so any relative entry has to be made absolute.
+    const base = new URL(playbackUrl);
+    const absolute = playlist
+      .split("\n")
+      .map((line) => {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith("#")) return line;
+        return new URL(trimmed, base).toString();
+      })
+      .join("\n");
+    return `data:application/x-mpegURL,${encodeURIComponent(absolute)}`;
+  } catch {
+    return playbackUrl;
+  }
+};
+
 const getLiveVideo = async (request: GetLiveVideoRequest): Promise<Video> => {
   const url = `https://kick.com/api/v1/channels/${request.channelApiId}`;
   const response = await application.networkRequest(url);
@@ -80,7 +110,7 @@ const getLiveVideo = async (request: GetLiveVideoRequest): Promise<Video> => {
     title: json.livestream?.session_title || "",
     sources: [
       {
-        source: json.playback_url,
+        source: await getLivePlaylistSource(json.playback_url),
         type: "application/x-mpegURL",
       },
     ],
